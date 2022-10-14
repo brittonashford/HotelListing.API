@@ -4,7 +4,7 @@ using RequiredAttribute = System.ComponentModel.DataAnnotations.RequiredAttribut
 
 namespace HotelListing.API.Models.Users
 {
-    public class ApiUserDto
+    public class ApiUserDto : LoginDto
     {
         [Required]
         public string FirstName { get; set; }
@@ -12,11 +12,5 @@ namespace HotelListing.API.Models.Users
         [Required]
         public string LastName { get; set; }
 
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
-
-        [Required]
-        public string Password { get; set; }
     }
 }
