@@ -1,18 +1,21 @@
-﻿using HotelListing.API.Data;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using HotelListing.API.Data;
 using HotelListing.API.Interfaces;
+using HotelListing.API.Models.Country;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace HotelListing.API.Repository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         private readonly HotelListingDbContext _context;
+
         public GenericRepository(HotelListingDbContext context)
         {
             this._context = context;
         }
-
-        public HotelListingDbContext Context { get; }
 
         public async Task<T> AddAsync(T entity)
         {
@@ -21,16 +24,16 @@ namespace HotelListing.API.Repository
             return entity;
         }
 
-        //Update and delete cannot happen async
         public async Task DeleteAsync(int id)
         {
             var entity = await GetAsync(id);
             _context.Set<T>().Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> Exists(int id)
         {
-            var entity = await GetAsync(id); 
+            var entity = await GetAsync(id);
             return entity != null;
         }
 
@@ -41,7 +44,7 @@ namespace HotelListing.API.Repository
 
         public async Task<T> GetAsync(int? id)
         {
-            if ( id is null)
+            if (id is null)
             {
                 return null;
             }
